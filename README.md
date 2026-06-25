@@ -9,6 +9,6 @@ Disponible en: https://agusmont616.github.io
 - GitHub Pages (hosting)
 
 ## Estructura
-index.html              → sitio principal
-CV_AgustinMontania_ES.pdf
+index.html              → sitio principal; 
+CV_AgustinMontania_ES.pdf; 
 CV_AgustinMontania_EN.pdf
