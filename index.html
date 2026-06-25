@@ -330,6 +330,8 @@
 </head>
 <body>
 
+<canvas id="binary-bg" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
 <nav>
   <div class="nav-inner">
     <span class="nav-logo">agustin.dev<span class="cursor"></span></span>
@@ -568,5 +570,82 @@
   </footer>
 
 </div>
+
+<script>
+(function () {
+  var canvas = document.getElementById('binary-bg');
+  var ctx = canvas.getContext('2d');
+
+  var CELL = 20;          // px per grid cell
+  var MAX_OP = 0.26;     // max opacity of a lit digit
+  var COLOR = '155,89,255'; // --purple
+
+  var cols, rows, cells;
+
+  function init() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols = Math.ceil(canvas.width  / CELL) + 1;
+    rows = Math.ceil(canvas.height / CELL) + 1;
+    var total = cols * rows;
+    cells = new Array(total);
+    for (var i = 0; i < total; i++) {
+      cells[i] = {
+        v:     Math.random() > 0.5 ? '1' : '0',
+        op:    0,
+        tgt:   0,
+        timer: Math.random() * 7000   // stagger startup
+      };
+    }
+  }
+
+  var prev = 0;
+  function frame(ts) {
+    var dt = Math.min(ts - prev, 100);
+    prev = ts;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = (CELL - 6) + "px 'JetBrains Mono',monospace";
+    ctx.textBaseline = 'top';
+
+    for (var i = 0; i < cells.length; i++) {
+      var c = cells[i];
+      c.timer -= dt;
+
+      if (c.timer <= 0) {
+        if (c.tgt > 0) {
+          // turn off; stay dark for a while
+          c.tgt   = 0;
+          c.timer = 2000 + Math.random() * 9000;
+        } else {
+          // turn on briefly
+          c.tgt   = MAX_OP * (0.35 + Math.random() * 0.65);
+          c.timer = 250  + Math.random() * 1800;
+          if (Math.random() > 0.55) c.v = Math.random() > 0.5 ? '1' : '0';
+        }
+      }
+
+      // smooth fade in/out
+      c.op += (c.tgt - c.op) * 0.07;
+
+      if (c.op > 0.004) {
+        ctx.fillStyle = 'rgba(' + COLOR + ',' + c.op + ')';
+        ctx.fillText(c.v, (i % cols) * CELL, Math.floor(i / cols) * CELL);
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  init();
+  requestAnimationFrame(frame);
+
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 200);
+  });
+})();
+</script>
 </body>
 </html>
