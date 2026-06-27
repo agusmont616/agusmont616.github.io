@@ -269,13 +269,17 @@
     .cv-dropdown {
       display: none;
       position: absolute;
-      top: calc(100% + 6px);
+      top: 100%;
       left: 0;
+      padding-top: 6px;
+      background: transparent;
+      z-index: 200;
+      min-width: 160px;
+    }
+    .cv-dropdown-inner {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 4px;
-      z-index: 200;
-      min-width: 160px;
       overflow: hidden;
     }
     .cv-wrapper:hover .cv-dropdown,
@@ -380,8 +384,10 @@
           Descargar CV ▾
         </button>
         <div class="cv-dropdown">
-          <a href="CV_AgustinMontania_ES.pdf" download>🇺🇾 Español</a>
-          <a href="CV_AgustinMontania_EN.pdf" download>🇬🇧 English</a>
+          <div class="cv-dropdown-inner">
+            <a href="CV_AgustinMontania_ES.pdf" download>🇺🇾 Español</a>
+            <a href="CV_AgustinMontania_EN.pdf" download>🇬🇧 English</a>
+          </div>
         </div>
       </div>
     </div>
